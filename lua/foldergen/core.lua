@@ -19,18 +19,25 @@ local function count_indent(line)
   return count or 0
 end
 
+local function is_tree_style(lines)
+  for _, line in ipairs(lines) do
+    if line:find("[│├└─]") or line:match("%S+%.%S+") then
+      return true
+    end
+  end
+  return false
+end
+
 function M.generate_from_text()
   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
 
-  local has_content = false
-  for _, line in ipairs(lines) do
-    if clean_line(line) ~= "" then
-      has_content = true
-      break
-    end
-  end
-  if not has_content then
+  if #lines == 0 then
     print("Buffer is empty! Please paste your tree structure first.")
+    return
+  end
+
+  if not is_tree_style(lines) then
+    print("No tree-style structure detected. Generation skipped.")
     return
   end
 
@@ -49,11 +56,17 @@ function M.generate_from_text()
       local parent_path = stack[#stack].path
       local path = parent_path .. "/" .. clean
 
-      if is_file(path) then
-        vim.fn.writefile({}, path)
-      else
-        vim.fn.mkdir(path, "p")
-        table.insert(stack, { path = path, depth = depth })
+      local success, err = pcall(function()
+        if is_file(path) then
+          vim.fn.writefile({}, path)
+        else
+          vim.fn.mkdir(path, "p")
+          table.insert(stack, { path = path, depth = depth })
+        end
+      end)
+
+      if not success then
+        print("Could not create: " .. path .. " (" .. err .. ")")
       end
     end
   end
