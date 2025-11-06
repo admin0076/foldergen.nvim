@@ -5,40 +5,23 @@ local function is_file(name)
 end
 
 local function clean_line(line)
-  line = line:gsub("[│├└─]", "")
   line = line:gsub("^%s+", ""):gsub("%s+$", "")
   line = line:gsub("%s*#.*", "")
   return line
-end
-
-local function count_indent(line)
-  local _, count = line:find("^%s*")
-  return count or 0
 end
 
 function M.generate_from_text()
   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
   local cwd = vim.fn.getcwd()
 
-  local stack = { { path = cwd, depth = -1 } }
-
   for _, line in ipairs(lines) do
     local clean = clean_line(line)
     if clean ~= "" then
-      local depth = count_indent(line)
-
-      while stack[#stack].depth >= depth do
-        table.remove(stack)
-      end
-
-      local parent_path = stack[#stack].path
-      local path = parent_path .. "/" .. clean
-
+      local path = cwd .. "/" .. clean
       if is_file(path) then
         vim.fn.writefile({}, path)
       else
         vim.fn.mkdir(path, "p")
-        table.insert(stack, { path = path, depth = depth })
       end
     end
   end
