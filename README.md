@@ -91,4 +91,4 @@ my-app
 
 ## License
 
-MIT License
+[MIT License](./LICENSE)
