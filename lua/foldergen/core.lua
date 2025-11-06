@@ -12,7 +12,8 @@ local function clean_line(line)
 end
 
 local function count_indent(line)
-  local _, count = line:find("^%s*")
+  local clean = line:gsub("[│├└─]", "")
+  local _, count = clean:find("^%s*")
   return count or 0
 end
 
