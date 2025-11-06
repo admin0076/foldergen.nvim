@@ -1,3 +1,5 @@
+---@diagnostic disable: undefined-global
+
 local M = {}
 
 local function is_file(name)
