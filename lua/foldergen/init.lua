@@ -1,5 +1,7 @@
-local folder_gen = require("folder_gen.core")
+local M = {}
 
-vim.api.nvim_create_user_command("FolderGen", function()
-  folder_gen.generate_from_text()
-end, {})
+M.generate_from_text = function()
+    require("foldergen.core").generate_from_text()
+end
+
+return M
