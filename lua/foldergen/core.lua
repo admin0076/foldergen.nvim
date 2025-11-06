@@ -3,7 +3,8 @@
 local M = {}
 
 local function is_file(name)
-  return name:match("^.+%..+$") ~= nil
+  local basename = name:match("[^/]+$") -- get last segment
+  return basename and basename:match("^.+%.[a-zA-Z0-9]+$") ~= nil
 end
 
 local function clean_line(line)
