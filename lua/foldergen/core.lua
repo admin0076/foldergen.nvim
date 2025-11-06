@@ -43,6 +43,7 @@ function M.generate_from_text()
 
   local cwd = vim.fn.getcwd()
   local stack = { { path = cwd, depth = -1 } }
+  local error_occurred = false
 
   for _, line in ipairs(lines) do
     local clean = clean_line(line)
@@ -56,7 +57,7 @@ function M.generate_from_text()
       local parent_path = stack[#stack].path
       local path = parent_path .. "/" .. clean
 
-      local success, err = pcall(function()
+      local success = pcall(function()
         if is_file(path) then
           vim.fn.writefile({}, path)
         else
@@ -66,12 +67,16 @@ function M.generate_from_text()
       end)
 
       if not success then
-        print("Could not generate folder structure")
+        error_occurred = true
       end
     end
   end
 
-  print("Folder structure generated successfully!")
+  if error_occurred then
+    print("Could not generate folder structure completely.")
+  else
+    print("Folder structure generated successfully!")
+  end
 end
 
 return M
