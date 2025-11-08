@@ -37,12 +37,19 @@ function M.generate_from_text()
 
   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
 
-  if #lines == 0 then
+  local non_empty_lines = {}
+  for _, line in ipairs(lines) do
+    if line:match("%S") then
+      table.insert(non_empty_lines, line)
+    end
+  end
+
+  if #non_empty_lines == 0 then
     print("Buffer is empty! Please paste your tree structure first.")
     return
   end
 
-  if not is_tree_style(lines) then
+  if not is_tree_style(non_empty_lines) then
     print("No tree-style structure detected. Generation skipped.")
     return
   end
@@ -51,7 +58,7 @@ function M.generate_from_text()
   local stack = { { path = cwd, depth = -1 } }
   local error_occurred = false
 
-  for _, line in ipairs(lines) do
+  for _, line in ipairs(non_empty_lines) do
     local clean = clean_line(line)
     if clean ~= "" then
       local depth = count_indent(line)
