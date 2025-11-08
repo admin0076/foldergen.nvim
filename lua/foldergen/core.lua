@@ -3,7 +3,7 @@
 local M = {}
 
 local function is_file(name)
-  return name:match("^.+%..+$") ~= nil
+  return name:match("^.+%.txt$") or name:match("^.+%.md$")
 end
 
 local function clean_line(line)
@@ -59,7 +59,7 @@ function M.generate_from_text()
 
       local success = pcall(function()
         if is_file(path) then
-          vim.fn.writefile({}, path)
+          vim.fn.writefile({}, path) -- only creates txt/md files
         else
           vim.fn.mkdir(path, "p")
           table.insert(stack, { path = path, depth = depth })
