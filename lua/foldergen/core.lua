@@ -12,10 +12,16 @@ local function clean_line(line)
   return line
 end
 
-local function count_indent(line)
-  local clean = line:gsub("[│├└─]", "")
-  local _, count = clean:find("^%s*")
-  return count or 0
+local function tree_depth(line)
+  local depth = 0
+  for c in line:gmatch(".") do
+    if c == "│" or c == "├" or c == "└" then
+      depth = depth + 1
+    else
+      break
+    end
+  end
+  return depth
 end
 
 local function is_tree_style(lines)
@@ -52,7 +58,7 @@ function M.generate_from_text()
   for _, line in ipairs(lines) do
     local clean = clean_line(line)
     if clean ~= "" then
-      local depth = count_indent(line)
+      local depth = tree_depth(line)
 
       while stack[#stack].depth >= depth do
         table.remove(stack)
