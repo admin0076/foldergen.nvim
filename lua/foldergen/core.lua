@@ -1,13 +1,8 @@
 ---@diagnostic disable: undefined-global
-
 local M = {}
 
 local function is_file(name)
   return name:match("^.+%..+$") ~= nil
-end
-
-local function is_supported_file(name)
-  return name:match("%.txt$") or name:match("%.md$")
 end
 
 local function clean_line(line)
@@ -32,19 +27,14 @@ local function is_tree_style(lines)
   return false
 end
 
-local function check_supported_files(lines)
-  for _, line in ipairs(lines) do
-    local clean = clean_line(line)
-    if clean ~= "" and is_file(clean) and not is_supported_file(clean) then
-      return false, clean
-    end
-  end
-  return true
-end
-
 function M.generate_from_text()
-  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  local bufname = vim.api.nvim_buf_get_name(0)
+  if not bufname:match("%.txt$") and not bufname:match("%.md$") then
+    print("Unsupported file type! Please paste your structure in a .txt or .md file.")
+    return
+  end
 
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
   if #lines == 0 then
     print("Buffer is empty! Please paste your tree structure first.")
     return
@@ -52,13 +42,6 @@ function M.generate_from_text()
 
   if not is_tree_style(lines) then
     print("No tree-style structure detected. Generation skipped.")
-    return
-  end
-
-  local supported, file_name = check_supported_files(lines)
-  if not supported then
-    print("Unsupported file type detected: " .. file_name)
-    print("Please paste a tree structure with only .txt or .md files.")
     return
   end
 
@@ -70,14 +53,11 @@ function M.generate_from_text()
     local clean = clean_line(line)
     if clean ~= "" then
       local depth = count_indent(line)
-
       while stack[#stack].depth >= depth do
         table.remove(stack)
       end
-
       local parent_path = stack[#stack].path
       local path = parent_path .. "/" .. clean
-
       local success = pcall(function()
         if is_file(path) then
           vim.fn.writefile({}, path)
@@ -86,7 +66,6 @@ function M.generate_from_text()
           table.insert(stack, { path = path, depth = depth })
         end
       end)
-
       if not success then
         error_occurred = true
       end
